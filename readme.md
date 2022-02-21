@@ -49,7 +49,7 @@ This project consists of a fully fledged ecommerce store. Containing both a clie
 
 ### Built With
 
-Those are the frameworks/libraries used to build this server.
+Those are the frameworks/libraries used to build this project.
 
 - [Node.js](https://nodejs.org/)
 - [TypeScript](https://www.typescriptlang.org/)
