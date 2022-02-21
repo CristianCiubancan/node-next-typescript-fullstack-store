@@ -1,0 +1,204 @@
+version: "3"
+services:
+  nginx:
+    image: fuww/alpine-nginx-sticky
+    container_name: reverse_proxy
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - /etc/letsencrypt:/etc/letsencrypt
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - webnet
+    depends_on:
+      - web1
+      - web2
+
+  db:
+    image: postgres
+    networks:
+      webnet:
+        ipv4_address: 173.18.0.3
+    environment:
+      POSTGRES_PASSWORD: pass
+      POSTGRES_USER: user
+      POSTGRES_DB: database
+    volumes:
+      - postgres_data_storage:/var/lib/postgresql/data/
+
+  web1:
+    container_name: web1
+    ports:
+      - 2222
+    image: user/store-server:latest
+    networks:
+      webnet:
+        ipv4_address: 173.18.0.9
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PASSWORD: pass
+      DATABASE_USER: user
+      DATABASE_DB: database
+      REDIS_HOST: redis
+      REDIS_CLUSTER_URLS: "redis_1:7001,redis_2:7002,redis_3:7003,redis_4:7004,redis_5:7005,redis_6:7006"
+      REDIS_PASSWORD: "pass"
+      CORS_ORIGIN: https://store.yourdomain.net
+      SERVER_URL: https://storeserver.yourdomain.net
+      SERVER_PORT: 2222
+    # depends_on:
+    #   - redis_1
+    #   - redis_2
+    #   - redis_3
+    #   - redis_4
+    #   - redis_5
+    #   - redis_6
+    #   - cluster_initiator
+    stdin_open: true
+    command: ["./wait-for-it.sh", "db:5432", "--", "node", "dist/index.js"]
+
+  web2:
+    container_name: web2
+    ports:
+      - 3333
+    image: user/store-server:latest
+    networks:
+      webnet:
+        ipv4_address: 173.18.0.10
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PASSWORD: pass
+      DATABASE_USER: user
+      DATABASE_DB: database
+      REDIS_HOST: redis
+      REDIS_CLUSTER_URLS: "redis_1:7001,redis_2:7002,redis_3:7003,redis_4:7004,redis_5:7005,redis_6:7006"
+      REDIS_PASSWORD: "pass"
+      CORS_ORIGIN: https://store.yourdomain.net
+      SERVER_URL: https://storeserver.yourdomain.net
+      SERVER_PORT: 3333
+    # depends_on:
+    #   - redis_1
+    #   - redis_2
+    #   - redis_3
+    #   - redis_4
+    #   - redis_5
+    #   - redis_6
+    #   - cluster_initiator
+    stdin_open: true
+    command: ["./wait-for-it.sh", "db:5432", "--", "node", "dist/index.js"]
+
+  redis-cluster:
+    image: redis:latest
+    container_name: redis_cluster
+    command: redis-cli -p 7001 --cluster create 173.18.0.11:7001 173.18.0.12:7002 173.18.0.13:7003 173.18.0.14:7004 173.18.0.15:7005 173.18.0.16:7006 --cluster-replicas 1 --cluster-yes
+    depends_on:
+      - redis-1
+      - redis-2
+      - redis-3
+      - redis-4
+      - redis-5
+      - redis-6
+    networks:
+      webnet:
+        ipv4_address: 173.18.0.5
+
+  redis-1:
+    image: ciubancan/redis-cluster-img:latest
+    container_name: redis_1
+    volumes:
+      - redis_1_data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    environment:
+      X_REDIS_PORT: 7001
+    networks:
+      webnet:
+        ipv4_address: 173.18.0.11
+    ports:
+      - 7001:6379
+
+  redis-2:
+    image: ciubancan/redis-cluster-img:latest
+    container_name: redis_2
+    volumes:
+      - redis_2_data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    environment:
+      X_REDIS_PORT: 7002
+    networks:
+      webnet:
+        ipv4_address: 173.18.0.12
+    ports:
+      - 7002:6379
+
+  redis-3:
+    image: ciubancan/redis-cluster-img:latest
+    container_name: redis_3
+    volumes:
+      - redis_3_data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    environment:
+      X_REDIS_PORT: 7003
+    networks:
+      webnet:
+        ipv4_address: 173.18.0.13
+    ports:
+      - 7003:6379
+
+  redis-4:
+    image: ciubancan/redis-cluster-img:latest
+    container_name: redis_4
+    volumes:
+      - redis_4_data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    environment:
+      X_REDIS_PORT: 7004
+    networks:
+      webnet:
+        ipv4_address: 173.18.0.14
+    ports:
+      - 7004:6379
+
+  redis-5:
+    image: ciubancan/redis-cluster-img:latest
+    container_name: redis_5
+    volumes:
+      - redis_5_data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    environment:
+      X_REDIS_PORT: 7005
+    networks:
+      webnet:
+        ipv4_address: 173.18.0.15
+    ports:
+      - 7005:6379
+
+  redis-6:
+    image: ciubancan/redis-cluster-img:latest
+    container_name: redis_6
+    volumes:
+      - redis_6_data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    environment:
+      X_REDIS_PORT: 7006
+    networks:
+      webnet:
+        ipv4_address: 173.18.0.16
+    ports:
+      - 7006:6379
+
+networks:
+  webnet:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 173.18.0.0/16
+
+volumes:
+  postgres_data_storage:
+  redis_1_data: {}
+  redis_2_data: {}
+  redis_3_data: {}
+  redis_4_data: {}
+  redis_5_data: {}
+  redis_6_data: {}

@@ -1,0 +1,7 @@
+.idea/
+.vscode/
+node_modules/
+build/
+tmp/
+temp/
+deploy_server_do.sh

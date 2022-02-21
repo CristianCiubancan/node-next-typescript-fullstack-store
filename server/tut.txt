@@ -1,0 +1,39 @@
+1.install docker on pc
+2.initiate a new ec2 instance on aws with ubuntu
+3.add security group rules for 443 and 80 ::/0 and 0.0.0.0/0
+4.run following commands for server project and redis project
+5.docker buildx  build -t user/package-name . --platform linux/amd64
+# for regular pc non mac m1 use docker build -t user/package-name . 
+6.docker push user/package-name:latest
+7.scp -i ~/.ssh/*****.pem docker-compose.yml nginx.conf wait-for-it.sh ubuntu@******:~
+8.ssh -i ~/.ssh/*****.pem ubuntu@*********
+9.curl -fsSL https://get.docker.com -o get-docker.sh
+10.sudo sh get-docker.sh
+11.enable elastic ip on ec2
+12.point domain to your ec2 Public IPv4 DNS as CNAME record
+13.sudo apt install letsencrypt
+14.sudo certbot certonly --standalone
+15.sudo docker-compose up 
+
+useful commands:
+-docker build -t user/server . 
+
+-docker push user/server:latest
+
+-scp -i C:\Users\user\.ssh\xxxxxxx.pem 
+docker-compose.yml nginx.conf wait-for-it.sh ubuntu@xxxxxxxxx:~
+
+-ssh -i c:\Users\user\.ssh\xxxxxxx.pem 
+ubuntu@xxxxxxxxx
+
+-sudo su
+
+-docker-compose down
+
+-docker-compose stop
+
+-docker-compose rm -f
+
+-docker-compose pull
+
+-docker-compose up
