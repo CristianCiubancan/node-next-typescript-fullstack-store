@@ -4,12 +4,15 @@
 
 This project consists of a fully fledged ecommerce store. Containing both a client for the store and an admin console.
 
+[Live Preview](https://store.happyoctopus.net/)
+
 ## Features:
 
 # Client:
 
 - Responsive Layout
 - SEO optimization
+- Dynamic sitemaps
 - N levels of categories and subcategories
 - Smart searching
 - Product sorting and filtering
