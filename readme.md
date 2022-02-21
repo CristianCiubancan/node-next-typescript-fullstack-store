@@ -97,7 +97,7 @@ To run this project you will need to do the following:
    ```sh
    yarn dev
    ```
-6. run client and admin
+6. run the following command in both client and admin folders
    ```sh
    yarn dev
    ```
