@@ -10,6 +10,11 @@ interface ProductComponentProps {
 const ProductComponent: React.FC<ProductComponentProps> = ({ product }) => {
   const ref = useRef(null) as any;
 
+  const initialPrices = product.variations.map((vari) => vari.price);
+  const pricesAfterDiscount = product.variations.map(
+    (vari) => vari.price * parseFloat(vari.discountMultiplier)
+  );
+
   const { enterCount } = useInViewport(
     ref,
     { rootMargin: "-10px" },
@@ -40,10 +45,9 @@ const ProductComponent: React.FC<ProductComponentProps> = ({ product }) => {
               fontSize={14}
               top={-2}
               right={-2}>
-              {`-${(
-                (parseFloat("1") - parseFloat(product.discountMultiplier)) *
-                100
-              ).toFixed(0)}%`}
+              {`-${((1 - parseFloat(product.discountMultiplier)) * 100).toFixed(
+                0
+              )}%`}
             </Box>
           ) : null}
           <Image
@@ -72,10 +76,10 @@ const ProductComponent: React.FC<ProductComponentProps> = ({ product }) => {
               fontWeight={"semibold"}
               fontSize={16}
               textOverflow={"ellipsis"}>
-              {product.minPrice === product.maxPrice
-                ? `${parseFloat(product.minPrice).toFixed(2)} Lei`
-                : `${parseFloat(product.minPrice).toFixed(2)} - ${parseInt(
-                    product.maxPrice
+              {Math.min(...initialPrices) === Math.max(...initialPrices)
+                ? `${Math.min(...initialPrices).toFixed(2)} Lei`
+                : `${Math.min(...initialPrices).toFixed(2)} Lei - ${Math.max(
+                    ...initialPrices
                   ).toFixed(2)} Lei`}
             </Text>
           ) : null}
@@ -87,15 +91,12 @@ const ProductComponent: React.FC<ProductComponentProps> = ({ product }) => {
             fontSize={18}
             color={product.isOnSale ? "red" : "black"}
             textOverflow={"ellipsis"}>
-            {product.minPrice === product.maxPrice
-              ? `${(
-                  parseFloat(product.minPrice) *
-                  parseFloat(product.discountMultiplier)
-                ).toFixed(2)} Lei`
-              : `${(
-                  parseFloat(product.minPrice) *
-                  parseFloat(product.discountMultiplier)
-                ).toFixed(2)} - ${parseInt(product.maxPrice).toFixed(2)} Lei`}
+            {Math.min(...pricesAfterDiscount) ===
+            Math.max(...pricesAfterDiscount)
+              ? `${Math.min(...pricesAfterDiscount).toFixed(2)} Lei`
+              : `${Math.min(...pricesAfterDiscount).toFixed(2)} - ${Math.max(
+                  ...pricesAfterDiscount
+                ).toFixed(2)} Lei`}
           </Text>
         </Box>
       </ScaleFade>

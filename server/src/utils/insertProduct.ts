@@ -1,6 +1,5 @@
 import { CreateProduct } from "../routes/product/createProduct";
 import { getConnection } from "typeorm";
-import {} from "../routes/";
 import { Product } from "../entities/Product/Product";
 import { ProductImage } from "../entities/Product/ProductImage";
 import { CategoryProduct } from "../entities/Category/CategoryProduct";
@@ -11,7 +10,10 @@ import { VariationAttributeValue } from "../entities/Product/VariationAttributeV
 import { Specification } from "../entities/Product/Specification";
 
 export const insertProduct = async (productData: CreateProduct) => {
-  const prices = productData.variations.map((variation) => variation.price);
+  const prices = productData.variations.map(
+    (variation) =>
+      (variation.price * (100 - parseFloat(variation.discountMultiplier))) / 100
+  );
 
   const productId = await getConnection()
     .createQueryBuilder()
@@ -34,8 +36,8 @@ export const insertProduct = async (productData: CreateProduct) => {
       discountMultiplier:
         productData.discountMultiplier === ""
           ? 1
-          : (100 - parseInt(productData.discountMultiplier)) / 100,
-      isOnSale: productData.isOnSale,
+          : (100 - parseFloat(productData.discountMultiplier)) / 100,
+      isOnSale: Math.min(...prices) !== Math.max(...prices),
       sku: productData.sku,
     })
     .returning("*")
@@ -127,7 +129,7 @@ export const insertProduct = async (productData: CreateProduct) => {
         discountMultiplier:
           variation.discountMultiplier === ""
             ? 1
-            : (100 - parseInt(variation.discountMultiplier)) / 100,
+            : (100 - parseFloat(variation.discountMultiplier)) / 100,
         sku: `${productData.sku}-${variation.name}`,
       };
     })

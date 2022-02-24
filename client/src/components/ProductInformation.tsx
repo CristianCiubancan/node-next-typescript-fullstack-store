@@ -24,6 +24,11 @@ const ProductInformation: React.FC<ProductInformationProps> = ({
 
   const watchAllFields = watch();
 
+  const initialPrices = product.variations.map((vari) => vari.price);
+  const pricesAfterDiscount = product.variations.map(
+    (vari) => vari.price * parseFloat(vari.discountMultiplier)
+  );
+
   useEffect(() => {
     const values = Object.keys(watchAllFields)
       .filter((key) => watchAllFields[key] !== undefined)
@@ -54,9 +59,9 @@ const ProductInformation: React.FC<ProductInformationProps> = ({
               as="s"
               fontWeight={"semibold"}
               fontSize={16}>
-              {`${parseFloat(product?.minPrice).toFixed(2)}${
-                product.minPrice !== product.maxPrice
-                  ? ` - ${parseFloat(product?.maxPrice).toFixed(2)}`
+              {`${Math.min(...initialPrices).toFixed(2)}${
+                Math.min(...initialPrices) !== Math.max(...initialPrices)
+                  ? ` - ${Math.max(...initialPrices).toFixed(2)}`
                   : ""
               }
             Lei`}
@@ -73,15 +78,10 @@ const ProductInformation: React.FC<ProductInformationProps> = ({
                 : "black"
             }
             textOverflow={"ellipsis"}>
-            {`${(
-              parseFloat(product?.minPrice) *
-              parseFloat(product.discountMultiplier)
-            ).toFixed(2)}${
-              product.minPrice !== product.maxPrice
-                ? ` - ${(
-                    parseFloat(product?.maxPrice) *
-                    parseFloat(product.discountMultiplier)
-                  ).toFixed(2)}`
+            {`${Math.min(...pricesAfterDiscount).toFixed(2)}${
+              Math.min(...pricesAfterDiscount) !==
+              Math.max(...pricesAfterDiscount)
+                ? ` - ${Math.max(...pricesAfterDiscount).toFixed(2)}`
                 : ""
             }
             Lei`}

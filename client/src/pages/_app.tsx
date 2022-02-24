@@ -5,7 +5,6 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import NextNprogress from "nextjs-progressbar";
 import React from "react";
-import GetAllCategoriesOperation from "../operations/category/getAllCategories";
 import GetNavCategoriesOperation from "../operations/category/getNavCategories";
 import { setNavCategories } from "../redux/features/navCategories/navCategoriesSlice";
 import { wrapper } from "../redux/store";
@@ -71,21 +70,13 @@ MyApp.getInitialProps = wrapper.getInitialAppProps(
 
     const cachedNavCategories = store.getState().navCategories.value;
 
-    const categories = await GetAllCategoriesOperation();
-
-    const cachedCategories = store.getState().categories.value;
-
     if (cachedNavCategories[0]?.id === 0) {
       const categories: NavCategory[] = await GetNavCategoriesOperation();
 
       store.dispatch(setNavCategories(categories));
     }
 
-    if (cachedCategories[0]?.id === 0) {
-      store.dispatch(setNavCategories(categories));
-    }
-
-    return { pageProps: { categories, ...appProps } };
+    return { pageProps: { ...appProps } };
   }
 );
 

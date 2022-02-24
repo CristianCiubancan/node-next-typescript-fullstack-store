@@ -2,6 +2,8 @@ import { PaginatedProductsForm } from "../../pages/products";
 
 export interface GetProductsRequestValues extends PaginatedProductsForm {
   cursor: string | null;
+  firstCursor: number | string | null;
+  secondCursor: string | null;
 }
 
 const GetProductsOperation = async (reqObj: GetProductsRequestValues) => {

@@ -38,6 +38,8 @@ const initialProductsSearchParams: GetProductsRequestValues = {
   searchField: "",
   sort: "name:ASC",
   cursor: null,
+  firstCursor: null,
+  secondCursor: null,
 };
 
 const Products: React.FC<ProductsProps> = ({
@@ -102,12 +104,16 @@ const Products: React.FC<ProductsProps> = ({
                   productsArray.products[productsArray.products.length - 1];
 
                 let cursor: string = "";
+                let firstCursor: string | number | null = null;
+                let secondCursor: string | null = null;
 
                 if (
                   searchParams.sort === "name:ASC" ||
                   searchParams.sort === "name:DESC"
                 ) {
                   cursor = `('${lastProduct.name}', '${lastProduct.sku}')`;
+                  firstCursor = lastProduct.name;
+                  secondCursor = lastProduct.sku;
                 } else if (
                   searchParams.sort === '"minPrice"*"discountMultiplier":ASC' ||
                   searchParams.sort === '"minPrice"*"discountMultiplier":DESC'
@@ -116,10 +122,17 @@ const Products: React.FC<ProductsProps> = ({
                     parseFloat(lastProduct.minPrice) *
                     parseFloat(lastProduct.discountMultiplier)
                   }', '${lastProduct.sku}')`;
+
+                  firstCursor =
+                    parseFloat(lastProduct.minPrice) *
+                    parseFloat(lastProduct.discountMultiplier);
+                  secondCursor = lastProduct.sku;
                 }
                 const products = await GetProductsOperation({
                   ...searchParams,
                   cursor,
+                  firstCursor,
+                  secondCursor,
                 });
                 setProductsArray({
                   products: [...productsArray.products, ...products.products],

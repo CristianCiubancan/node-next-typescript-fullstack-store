@@ -111,9 +111,13 @@ const Store: NextPage<StoreProps> = ({ pageProps }) => {
         ];
 
       let cursor: string = "";
+      let firstCursor: string | number | null = null;
+      let secondCursor: string | null = null;
 
       if (data.sort === "name:ASC" || data.sort === "name:DESC") {
         cursor = `('${lastProduct.name}', '${lastProduct.sku}')`;
+        firstCursor = lastProduct.name;
+        secondCursor = lastProduct.sku;
       } else if (
         data.sort === '"minPrice"*"discountMultiplier":ASC' ||
         data.sort === '"minPrice"*"discountMultiplier":DESC'
@@ -122,10 +126,17 @@ const Store: NextPage<StoreProps> = ({ pageProps }) => {
           parseFloat(lastProduct.minPrice) *
           parseFloat(lastProduct.discountMultiplier)
         }', '${lastProduct.sku}')`;
+
+        firstCursor =
+          parseFloat(lastProduct.minPrice) *
+          parseFloat(lastProduct.discountMultiplier);
+        secondCursor = lastProduct.sku;
       }
       const products = await GetProductsOperation({
         ...data,
         cursor,
+        firstCursor,
+        secondCursor,
       } as GetProductsRequestValues);
 
       if (products.error) {
