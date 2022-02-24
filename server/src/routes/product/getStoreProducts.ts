@@ -38,11 +38,29 @@ const handleGetStoreProducts = async (req: Req, res: express.Response) => {
 
   const sortElements = sort.split(":");
 
+  let triedToHack: boolean = false;
+
+  const setTriedToHack = (string: string) => {
+    const specialsCheck = /^[0-9A-Za-z\s\-]+$/;
+    if (!specialsCheck.test(string)) {
+      triedToHack = true;
+    }
+    if (string.includes("--")) {
+      triedToHack = true;
+    }
+  };
+
   const attributeClauses = attributes?.map((atr) => {
+    setTriedToHack(atr.name);
     return `(at.name = '${atr.name}' AND va.name in (${atr.values.map((val) => {
+      setTriedToHack(val);
       return `'${val}'`;
     })}))`;
   });
+
+  if (triedToHack) {
+    return res.json({ error: "whoopsie" });
+  }
 
   let products: Product[] = [];
   if (categoryId) {
