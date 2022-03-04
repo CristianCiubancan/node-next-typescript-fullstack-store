@@ -41,6 +41,7 @@ const Checkout: React.FC<CheckoutProps> = () => {
         <meta property="og:title" content="Checkout" />
         <meta property="og:site_name" content="store.happyoctopus.net" />
         <meta property="og:description" content="Checkout" />
+        <meta name="description" content="Checkout" />
         <meta
           property="og:image"
           content={`Latest and greatest products brought to you exclusively by HappyOctopus's Jelly Bracelets.`}

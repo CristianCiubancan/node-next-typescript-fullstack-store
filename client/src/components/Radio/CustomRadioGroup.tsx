@@ -45,14 +45,14 @@ const CutomRadioGroup: React.FC<CutomRadioGroupProps> = ({
     <FormControl isInvalid={!!fieldState.error}>
       <HStack {...group}>
         <Wrap>
-          {values.map((value) => {
+          {values.map((value, idx) => {
             const radio = getRadioProps({
               value: value.name,
             });
             return (
-              <RadioCard key={value.id} {...radio}>
-                {value.name}
-              </RadioCard>
+              <Box key={value.name + idx}>
+                <RadioCard {...radio}>{value.name}</RadioCard>
+              </Box>
             );
           })}
         </Wrap>

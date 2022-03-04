@@ -35,6 +35,7 @@ const CheckoutItemsUnavailableWindow: React.FC<
                 <Flex my={2} key={item.variationSku} borderWidth={1}>
                   <AspectRatio ratio={1} w={"60px"}>
                     <Image
+                      alt={item.productName}
                       src={item.image}
                       fallbackSrc={item?.placeholderUrl}
                       objectFit={"cover"}
@@ -67,6 +68,7 @@ const CheckoutItemsUnavailableWindow: React.FC<
                 <Flex my={2} key={item.variationSku} borderWidth={1}>
                   <AspectRatio ratio={1} w={"60px"}>
                     <Image
+                      alt={item.productName}
                       src={item.image}
                       fallbackSrc={item?.placeholderUrl}
                       objectFit={"cover"}
@@ -105,7 +107,7 @@ const CheckoutItemsUnavailableWindow: React.FC<
         <Button
           w={"100%"}
           my={2}
-          colorScheme={"teal"}
+          colorScheme={"purple"}
           onClick={onUpdateCartClose}>
           OK
         </Button>

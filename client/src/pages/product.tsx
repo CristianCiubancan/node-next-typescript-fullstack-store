@@ -1,7 +1,7 @@
-import { Box, Button, Flex, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Spinner, Text } from "@chakra-ui/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { NextPage, NextPageContext } from "next/types";
+import { NextPage } from "next/types";
 import { useEffect, useState } from "react";
 import AddToCartButton from "../components/AddToCartButton";
 import Carousel from "../components/Carousel";
@@ -10,12 +10,13 @@ import ProductDescriptionAndSpecifications from "../components/ProductDescriptio
 import ProductInformation from "../components/ProductInformation";
 import RelatedProducts from "../components/RelatedProducts";
 import GetProductOperation from "../operations/product/getProduct";
+import { wrapper } from "../redux/store";
 import { Product, Variation } from "../types/product";
 import { getScreenSize } from "../utils/getScreenSize";
 
 interface ProductProps {
   pageProps: {
-    productData: Product;
+    initialProps: { productData: Product };
   };
 }
 
@@ -25,7 +26,7 @@ const Product: NextPage<ProductProps> = ({ pageProps }) => {
     useState<Variation | null>();
 
   const [product, setProduct] = useState<Product | null>(null);
-  const [isProductLoading, setIsProductLoading] = useState<boolean>(false);
+  const [isProductLoading, setIsProductLoading] = useState<boolean>(true);
   const router = useRouter();
 
   const fetchProduct = async (id: string) => {
@@ -43,6 +44,7 @@ const Product: NextPage<ProductProps> = ({ pageProps }) => {
   };
 
   useEffect(() => {
+    setIsProductLoading(true);
     const data = router.query;
 
     setSelectedVariation(null);
@@ -54,7 +56,9 @@ const Product: NextPage<ProductProps> = ({ pageProps }) => {
   return (
     <Layout>
       <Head>
-        <title>{product ? product.name : pageProps.productData.name}</title>
+        <title>
+          {product ? product.name : pageProps.initialProps.productData.name}
+        </title>
         <link
           rel="icon"
           type="image/png"
@@ -63,13 +67,25 @@ const Product: NextPage<ProductProps> = ({ pageProps }) => {
         />
         <meta
           property="og:title"
-          content={product ? product.name : pageProps.productData.name}
+          content={
+            product ? product.name : pageProps.initialProps.productData.name
+          }
         />
         <meta property="og:site_name" content="store.happyoctopus.net" />
         <meta
           property="og:description"
           content={
-            product ? product.description : pageProps.productData.description
+            product
+              ? product.description
+              : pageProps.initialProps.productData.description
+          }
+        />
+        <meta
+          name="description"
+          content={
+            product
+              ? product.description
+              : pageProps.initialProps.productData.description
           }
         />
         <meta
@@ -79,7 +95,7 @@ const Product: NextPage<ProductProps> = ({ pageProps }) => {
               ? product.images[0]?.sizes.filter(
                   (size: any) => size.width === 150
                 )[0]?.url
-              : pageProps.productData.images[0]?.sizes.filter(
+              : pageProps.initialProps.productData.images[0]?.sizes.filter(
                   (size: any) => size.width === 150
                 )[0]?.url
           }
@@ -94,12 +110,19 @@ const Product: NextPage<ProductProps> = ({ pageProps }) => {
             onClick={() => {
               router.push("/");
             }}
-            colorScheme={"teal"}
+            colorScheme={"purple"}
             mt={4}>
             Go home
           </Button>
         </Flex>
       ) : null}
+
+      {!product && isProductLoading ? (
+        <Flex flexDirection={"column"} alignItems={"center"}>
+          <Spinner color={"purple.500"} my={4} />
+        </Flex>
+      ) : null}
+
       {product && !isProductLoading ? (
         <Flex flexDirection={"column"} w={"100%"} p={4} alignItems={"center"}>
           <Flex
@@ -143,20 +166,22 @@ const Product: NextPage<ProductProps> = ({ pageProps }) => {
   );
 };
 
-(Product as any).getInitialProps = async (context: NextPageContext) => {
-  const product = await GetProductOperation({
-    id: context.query.productId as string,
-  });
+Product.getInitialProps = wrapper.getInitialPageProps(
+  (store) => async (context) => {
+    const product = await GetProductOperation({
+      id: context.query.productId as string,
+    });
 
-  if (product.error) {
-    return {
-      productData: null,
-    };
-  } else {
-    return {
-      productData: product,
-    };
+    if (product.error) {
+      return {
+        productData: null,
+      };
+    } else {
+      return {
+        productData: product,
+      };
+    }
   }
-};
+);
 
 export default Product;

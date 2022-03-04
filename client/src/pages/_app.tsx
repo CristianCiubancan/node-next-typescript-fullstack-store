@@ -2,7 +2,6 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { css, Global } from "@emotion/react";
 import App, { AppContext, AppProps } from "next/app";
 import Head from "next/head";
-import { useRouter } from "next/router";
 import NextNprogress from "nextjs-progressbar";
 import React from "react";
 import GetNavCategoriesOperation from "../operations/category/getNavCategories";
@@ -15,15 +14,6 @@ const GlobalStyle = ({ children }: any) => {
     <>
       <Global
         styles={css`
-          html {
-            height: 100%;
-          }
-          body {
-            height: 100%;
-          }
-          #__next {
-            height: 100%;
-          }
           label {
             touch-action: none;
           }
@@ -35,14 +25,13 @@ const GlobalStyle = ({ children }: any) => {
 };
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const router = useRouter();
-
   return (
     <ChakraProvider>
       <GlobalStyle>
         <Head>
           <title>Jelly Bracelets</title>
           <meta property="og:site_name" content="store.happyoctopus.net" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link
             rel="icon"
             type="image/png"

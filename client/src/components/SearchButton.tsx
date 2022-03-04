@@ -8,6 +8,7 @@ import {
   Menu,
   MenuButton,
   MenuList,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -24,6 +25,8 @@ const SearchButton: React.FC<SearchButtonProps> = () => {
 
   const { handleSubmit, register } = methods;
 
+  const { onOpen, isOpen, onClose } = useDisclosure();
+
   const onSubmit = async (data: any) => {
     setIsSearching(true);
 
@@ -34,10 +37,11 @@ const SearchButton: React.FC<SearchButtonProps> = () => {
     router.push(`/store?${routerParams.join("&")}`);
 
     setIsSearching(false);
+    onClose();
   };
 
   return (
-    <Menu gutter={12}>
+    <Menu gutter={12} onOpen={onOpen} onClose={onClose} isOpen={isOpen}>
       {({ isOpen }) => (
         <>
           <MenuButton
@@ -45,12 +49,15 @@ const SearchButton: React.FC<SearchButtonProps> = () => {
             as={IconButton}
             p={0}
             aria-label="Search"
-            colorScheme={"teal"}
+            colorScheme={"purple"}
             color={"white"}
             size="md"
             icon={<SearchIcon />}
           />
-          <MenuList right={0} p={4}>
+          {
+            //position absoluto and right were set to fix overflowing on some devices
+          }
+          <MenuList w={"150px"} position={"absolute"} right={-10} p={4}>
             <FormProvider {...methods}>
               <form
                 name="get-paginated-products"
@@ -71,7 +78,7 @@ const SearchButton: React.FC<SearchButtonProps> = () => {
                 <Button
                   isLoading={isSearching}
                   type={"submit"}
-                  colorScheme={"teal"}
+                  colorScheme={"purple"}
                   w={"100%"}>
                   Go
                 </Button>

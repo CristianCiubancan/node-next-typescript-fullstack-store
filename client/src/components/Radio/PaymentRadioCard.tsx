@@ -20,7 +20,7 @@ const PaymentRadioCard = (props: any) => {
         }}
         px={5}
         py={8}>
-        <Flex ml={4} alignItems={"center"} color={"teal"}>
+        <Flex ml={4} alignItems={"center"} color={"purple"}>
           {props.children === "Cash" ? (
             <Icon boxSize={10} as={BsCash} />
           ) : (

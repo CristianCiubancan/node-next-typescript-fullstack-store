@@ -16,7 +16,6 @@ import handleCompleteOrder from "./order/completeOrder";
 import handleEditProduct from "./product/editProduct";
 import handleGetProductAttributes from "./product/getAttributesAndValues";
 import { handleGetRelatedProducts } from "./product/getRelatedProducts";
-import handleGetStoreProducts from "./product/getStoreProducts";
 import handleConfirmAdmin from "./user/confirmAdmin";
 import handleLogin from "./user/login";
 import handleLogout from "./user/logout";
@@ -31,6 +30,7 @@ import handleCreateProduct from "./product/createProduct";
 import handleDeleteProduct from "./product/deleteProduct";
 import handleGetProduct from "./product/getProduct";
 import handleGetCategoryName from "./categories/getCategoryName";
+import handleGetStoreProducts from "./product/getStoreProducts";
 
 //multer for file upload
 const upload = multer({});

@@ -1,9 +1,8 @@
-import { Box, Flex } from "@chakra-ui/layout";
+import { Flex } from "@chakra-ui/layout";
 import { useToast } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import GetNavCategoriesOperation from "../../operations/category/getNavCategories";
-import { setCategories } from "../../redux/features/categories/categoriesSlice";
 import { setNavCategories } from "../../redux/features/navCategories/navCategoriesSlice";
 import { useAppSelector } from "../../redux/hooks";
 import { NavCategory } from "../../types/navCategories";
@@ -13,42 +12,41 @@ import { MobileNav } from "./Mobile";
 
 interface NavBarProps {}
 
-export const NavBar: React.FC<NavBarProps> = ({}) => {
+export const NavBar: React.FC<NavBarProps> = () => {
   const { width: screenWidth } = getScreenSize();
 
   const toast = useToast();
 
+  const [navigationCategories, setNavigationCategories] = useState<
+    NavCategory[]
+  >([]);
+
   const {
     navCategories: { value: navCategories },
-    categories: { value: categories },
   } = useAppSelector((state) => state);
 
   const dispatch = useDispatch();
 
   const updateCategories = async () => {
-    const fetchedNavCategories: NavCategory[] =
-      await GetNavCategoriesOperation();
-
-    if (
-      JSON.stringify(fetchedNavCategories) !== JSON.stringify(navCategories)
-    ) {
-      dispatch(setNavCategories(fetchedNavCategories));
+    if (navCategories.length) {
+      setNavigationCategories(navCategories);
     }
 
-    const fetchedCategories = await GetNavCategoriesOperation();
+    const fetchedNavCategories = await GetNavCategoriesOperation();
 
-    if (fetchedCategories.error) {
+    if (fetchedNavCategories.error) {
       toast({
         title: "Error while fetching categories",
-        description: fetchedCategories.error,
+        description: fetchedNavCategories.error,
         status: "error",
         duration: 9000,
         isClosable: true,
       });
-    } else {
-      if (JSON.stringify(fetchedCategories) !== JSON.stringify(categories)) {
-        dispatch(setCategories(fetchedCategories));
-      }
+    } else if (
+      JSON.stringify(fetchedNavCategories) !== JSON.stringify(navCategories)
+    ) {
+      setNavigationCategories(fetchedNavCategories);
+      dispatch(setNavCategories(fetchedNavCategories));
     }
   };
 
@@ -62,12 +60,12 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
       zIndex={2}
       position="sticky"
       top={0}
-      bg="teal"
+      bg="purple.600"
       w={"100%"}>
       {screenWidth > 1023 ? (
-        <DesktopNav categories={navCategories} />
+        <DesktopNav categories={navigationCategories} />
       ) : (
-        <MobileNav categories={navCategories} />
+        <MobileNav categories={navigationCategories} />
       )}
     </Flex>
   );

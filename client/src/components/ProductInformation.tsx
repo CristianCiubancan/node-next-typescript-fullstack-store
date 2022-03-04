@@ -92,7 +92,7 @@ const ProductInformation: React.FC<ProductInformationProps> = ({
             whiteSpace={"nowrap"}
             textOverflow={"ellipsis"}
             fontWeight={"normal"}
-            color={"teal"}
+            color={"purple"}
             mt={2}
             fontSize={16}>
             select product attributes to check availability

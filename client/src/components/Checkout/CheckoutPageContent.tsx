@@ -82,7 +82,7 @@ const CheckoutFormContent: React.FC<CheckoutFormContentProps> = ({
           {!paymentMethod || paymentMethod === "Cash" ? (
             <Button
               isLoading={isLoading}
-              colorScheme={"teal"}
+              colorScheme={"purple"}
               mt={10}
               type="submit">
               Order now
@@ -91,7 +91,7 @@ const CheckoutFormContent: React.FC<CheckoutFormContentProps> = ({
             <>
               <Button
                 isLoading={isLoading}
-                colorScheme={"teal"}
+                colorScheme={"purple"}
                 mt={10}
                 type="submit">
                 Order now

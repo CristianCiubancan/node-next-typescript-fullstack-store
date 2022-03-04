@@ -59,6 +59,7 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({ categories }) => {
               <AccordionButton
                 fontSize={16}
                 fontWeight={"normal"}
+                px={2}
                 whiteSpace={"nowrap"}
                 onClick={(e) => {
                   e.preventDefault();
@@ -88,7 +89,7 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({ categories }) => {
       </Flex>
 
       <Flex
-        backgroundColor={"teal"}
+        backgroundColor={"purple.600"}
         justifyContent={"space-between"}
         alignItems={"center"}
         minH={"4em"}>
@@ -97,7 +98,7 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({ categories }) => {
             ref={ref as any}
             p={2}
             allowToggle
-            backgroundColor={"teal"}
+            backgroundColor={"purple.600"}
             index={accordionIndex}
             textColor={"white"}
             onChange={(e: number) => {
@@ -119,8 +120,8 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({ categories }) => {
                 cart.value.cartItems
                   ?.map((item) => item.quantity)
                   .reduce((partialSum, a) => partialSum + a, 0) > 0
-                  ? "teal"
-                  : "teal"
+                  ? "purple"
+                  : "purple"
               }
               aria-label="Call Segun"
               size="md"

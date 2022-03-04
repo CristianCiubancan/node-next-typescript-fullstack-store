@@ -60,6 +60,8 @@ const CarouselThumbs: React.FC<CarouselThumbsProps> = ({
         ref={elementRef as any}
         id={containerName}
         zIndex={1}
+        // can be scroll but might not look the best
+        // overflow={"scroll"}
         overflow={"hidden"}
         alignItems={"flex-start"}>
         {children}

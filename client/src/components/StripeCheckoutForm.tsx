@@ -74,8 +74,6 @@ const StripeCheckoutForm: React.FC<StripeCheckoutFormProps> = ({
   }, [stripe]);
 
   const handleSubmit = async (e: any) => {
-    e.preventDefault();
-
     if (!stripe || !elements) {
       return;
     }
@@ -136,7 +134,7 @@ const StripeCheckoutForm: React.FC<StripeCheckoutFormProps> = ({
         onClick={handleSubmit}
         my={4}
         w={"100%"}
-        colorScheme={"teal"}
+        colorScheme={"purple"}
         disabled={isLoading || !stripe || !elements || isDisabled}
         id="submit">
         {isLoading ? <Spinner /> : "Pay now"}

@@ -4,6 +4,7 @@ import "dotenv-safe/config";
 import express from "express";
 import session from "express-session";
 import * as http from "http";
+import * as https from "https";
 import Redis from "ioredis";
 import path from "path";
 import { createConnection } from "typeorm";
@@ -24,6 +25,7 @@ import { routes } from "./routes";
 import { Specification } from "./entities/Product/Specification";
 import { Order } from "./entities/Order/Order";
 import { OrderItem } from "./entities/Order/OrderItem";
+import cron from "node-cron";
 
 //code to keep session alive even if errors accour
 process.on("uncaughtException", (err) => {
@@ -85,6 +87,7 @@ const main = async () => {
         process.env.CORS_ORIGIN_ADMIN,
         "http://localhost:3001",
         "http://192.168.100.3:3000",
+        "http://192.168.100.42:3000",
       ],
 
       credentials: true,
@@ -126,6 +129,14 @@ const main = async () => {
 
     //http paths
     routes(app, redisClient);
+
+    //cron job to keep vercel functions alive and improve performance
+    cron.schedule("*/1 * * * *", async () => {
+      https.get(process.env.CORS_ORIGIN_CLIENT as string).on("error", (err) => {
+        console.log("Error: ", err.message);
+      });
+      console.log("client warmed");
+    });
 
     server.listen(process.env.SERVER_PORT, () => {
       console.log(

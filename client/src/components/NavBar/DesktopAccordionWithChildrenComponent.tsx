@@ -21,11 +21,12 @@ export const DesktopAccordionWithChildrenComponent: React.FC<
     <AccordionItem border="none">
       {({ isExpanded }) => (
         <>
-          <Flex justifyContent={"space-between"} alignItems={"center"}>
+          <Flex justifyContent={"space-between"} alignItems={"center"} pr={2}>
             <AccordionButton
               fontSize={16}
               whiteSpace={"nowrap"}
               pr={1}
+              pl={2}
               overflow={"hidden"}
               w={"100%"}
               textOverflow={"ellipsis"}
@@ -49,7 +50,7 @@ export const DesktopAccordionWithChildrenComponent: React.FC<
                 _hover={{ backgroundColor: "gray.300" }}
                 backgroundColor={"white"}
                 borderRadius={"md"}>
-                <AccordionIcon color={"teal"} />
+                <AccordionIcon color={"purple"} />
               </AccordionButton>
             </h2>
           </Flex>

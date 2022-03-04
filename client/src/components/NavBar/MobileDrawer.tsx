@@ -67,8 +67,8 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ categories }) => {
                       px={0}
                       py={1}
                       w={8}
-                      _hover={{ backgroundColor: "teal.700" }}
-                      backgroundColor={"teal"}
+                      _hover={{ backgroundColor: "purple.700" }}
+                      backgroundColor={"purple"}
                       borderRadius={"md"}>
                       <AccordionIcon mx={"auto"} color={"white"} />
                     </AccordionButton>
@@ -117,13 +117,13 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ categories }) => {
 
   useEffect(() => {
     setCategoryElements(recursiveBuild(categories));
-  }, []);
+  }, [categories]);
 
   return (
     <>
       <IconButton
         ref={btnRef as any}
-        colorScheme="teal"
+        colorScheme="purple"
         onClick={onOpen}
         aria-label="Search database"
         icon={<HamburgerIcon />}

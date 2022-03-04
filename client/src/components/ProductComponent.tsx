@@ -51,12 +51,13 @@ const ProductComponent: React.FC<ProductComponentProps> = ({ product }) => {
             </Box>
           ) : null}
           <Image
+            alt={product.name}
             borderRadius={6}
             w={[160, 210, 180, 230, 250]}
             h={[160, 210, 180, 230, 250]}
             objectFit={"cover"}
             src={
-              product.images[0]?.sizes.filter((size) => size.width === 300)[0]
+              product.images[0]?.sizes.filter((size) => size.width === 500)[0]
                 ?.url
             }
             fallbackSrc={product.images[0]?.placeholderUrl}

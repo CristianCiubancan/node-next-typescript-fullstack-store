@@ -20,7 +20,7 @@ interface ProductsState {
 const initialState: ProductsState = {
   value: {
     cachedProductCategories: [],
-    isLoading: false,
+    isLoading: true,
   },
 };
 
@@ -28,24 +28,6 @@ const productsSlice = createSlice({
   name: "products",
   initialState,
   reducers: {
-    // setRouterQuery(state, action) {
-    //   const otherCats = (state.value.cachedProductCategories = current(
-    //     state
-    //   ).value.cachedProductCategories.filter(
-    //     (cachedCat) => cachedCat.routerQuery !== action.payload
-    //   ));
-
-    //   const currentCat = (state.value.cachedProductCategories = current(
-    //     state
-    //   ).value.cachedProductCategories.filter(
-    //     (cachedCat) => cachedCat.routerQuery === action.payload
-    //   ));
-
-    //   state.value.cachedProductCategories = [
-    //     ...otherCats,
-    //     { routerQuery: action.payload, productsArray: [] },
-    //   ];
-    // },
     setProductsArray(state, action) {
       const otherCats = current(state).value.cachedProductCategories.filter(
         (cachedCat) => cachedCat.routerQuery !== action.payload.routerQuery
@@ -81,12 +63,10 @@ const productsSlice = createSlice({
             ...currentCat[0].productsArray,
             ...action.payload.productsArray,
           ],
+          hasMore: action.payload.hasMore,
         },
       ];
     },
-    // setHasMore(state, action) {
-    //   state.value.hasMore = action.payload;
-    // },
     setIsLoading(state, action) {
       state.value.isLoading = action.payload;
     },

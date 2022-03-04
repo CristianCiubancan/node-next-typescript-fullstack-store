@@ -15,9 +15,8 @@ interface MobileNavProps {
 
 export const MobileNav: React.FC<MobileNavProps> = ({ categories }) => {
   const { cart } = useAppSelector((state) => state);
-
   return (
-    <Flex w={"100%"} h={"4em"} backgroundColor={"teal"}>
+    <Flex w={"100%"} h={"4em"} backgroundColor={"purple.600"}>
       <Flex ml={2} w={"100%"} alignItems={"center"}>
         <MobileDrawer categories={categories} />
       </Flex>
@@ -36,8 +35,8 @@ export const MobileNav: React.FC<MobileNavProps> = ({ categories }) => {
                 cart.value.cartItems
                   ?.map((item) => item.quantity)
                   .reduce((partialSum, a) => partialSum + a, 0) > 0
-                  ? "teal"
-                  : "teal"
+                  ? "purple"
+                  : "purple"
               }
               aria-label="Call Segun"
               size="md"

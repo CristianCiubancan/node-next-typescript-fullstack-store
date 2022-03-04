@@ -4,7 +4,6 @@ import { CgZoomIn, CgZoomOut } from "react-icons/cg";
 import { GrPowerReset } from "react-icons/gr";
 import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 import { Img } from "../types/product";
-import { getScreenSize } from "../utils/getScreenSize";
 import CarouselThumbs from "./CarouselThumbs";
 
 interface CarouselProps {
@@ -12,8 +11,6 @@ interface CarouselProps {
 }
 
 const Carousel: React.FC<CarouselProps> = ({ images }) => {
-  const screenSize = getScreenSize();
-
   const [slideIndex, setSlideIndex] = useState(1);
 
   const moveDot = (index: number) => {
@@ -70,6 +67,7 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
                   <Image
                     maxW="100%"
                     minH="100%"
+                    alt={images[slideIndex - 1]?.name}
                     w={500}
                     h={[300, 500]}
                     backgroundPosition={"center"}
@@ -98,7 +96,7 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
                   p={1}
                   key={index}
                   backgroundColor={
-                    index + 1 === slideIndex ? "teal.600" : "white"
+                    index + 1 === slideIndex ? "purple.600" : "white"
                   }
                   my={2}>
                   <AspectRatio ratio={1} backgroundColor={"white"} w={20}>
@@ -106,6 +104,7 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
                       onClick={() => moveDot(index + 1)}
                       borderWidth={index + 1 === slideIndex ? "1px" : "0px"}
                       objectFit={"cover"}
+                      alt={image.name}
                       src={
                         image.sizes.filter((size) => size.width === 150)[0]?.url
                       }

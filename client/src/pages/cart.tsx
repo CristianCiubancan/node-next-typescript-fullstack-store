@@ -52,6 +52,7 @@ const Cart: React.FC<CartProps> = () => {
         <meta property="og:title" content="Cart" />
         <meta property="og:site_name" content="store.happyoctopus.net" />
         <meta property="og:description" content="Cart" />
+        <meta name="description" content="Cart" />
         <meta
           property="og:image"
           content={`Latest and greatest products brought to you exclusively by HappyOctopus's Jelly Bracelets.`}
@@ -101,7 +102,7 @@ const Cart: React.FC<CartProps> = () => {
 
             {screenSize.width >= 1024 ? (
               <NextLink href={"/checkout"}>
-                <Button colorScheme={"teal"} mt={10}>
+                <Button colorScheme={"purple"} mt={10}>
                   Checkout now
                 </Button>
               </NextLink>
@@ -115,7 +116,7 @@ const Cart: React.FC<CartProps> = () => {
               mx={10}
               bottom={2}
               position={"sticky"}
-              colorScheme={"teal"}
+              colorScheme={"purple"}
               my={10}>
               Checkout now
             </Button>

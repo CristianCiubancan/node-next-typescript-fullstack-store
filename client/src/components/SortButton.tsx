@@ -28,14 +28,14 @@ const SortButton: React.FC<SortButtonProps> = ({ attributes }) => {
 
   return (
     <Menu gutter={12}>
-      {({ isOpen }) => (
+      {({ isOpen, onClose }) => (
         <>
           <MenuButton
             isActive={isOpen}
             as={IconButton}
             p={0}
             aria-label="Search"
-            colorScheme={"teal"}
+            colorScheme={"purple"}
             color={"white"}
             size="lg"
             icon={<FaSortAlphaUp />}
@@ -61,7 +61,7 @@ const SortButton: React.FC<SortButtonProps> = ({ attributes }) => {
 
             <Button
               mt={2}
-              colorScheme={"teal"}
+              colorScheme={"purple"}
               w={"100%"}
               onClick={() => {
                 const data = router.query;
@@ -95,6 +95,7 @@ const SortButton: React.FC<SortButtonProps> = ({ attributes }) => {
                   `sort=${sort}`,
                 ].join("&");
                 router.push(`/store?${newParams}`);
+                onClose();
               }}>
               Sort
             </Button>

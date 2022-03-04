@@ -1,14 +1,15 @@
 import {
-  Flex,
   Box,
+  Flex,
   Skeleton,
   SkeletonText,
+  Spinner,
   Text,
   useToast,
 } from "@chakra-ui/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { NextPage, NextPageContext } from "next/types";
+import { NextPage } from "next/types";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Layout from "../components/Layout";
 import ProductComponent from "../components/ProductComponent";
@@ -25,13 +26,16 @@ import {
   setProductsArray,
 } from "../redux/features/products/productsSlice";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { wrapper } from "../redux/store";
 import { Product } from "../types/product";
 import { getParams } from "../utils/getParams";
 import { newSearchParams } from "../utils/newSearchParams";
 
 interface StoreProps {
   pageProps: {
-    categoryNameData: string;
+    initialProps: {
+      categoryNameData: string;
+    };
   };
 }
 
@@ -46,6 +50,8 @@ export interface SearchParams {
 const Store: NextPage<StoreProps> = ({ pageProps }) => {
   const [endReached, setEndReached] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(false);
+  const [isFetchingMore, setIsFetchingMore] = useState<boolean>(false);
+  const [localIsLoading, setLocalIsLoading] = useState<boolean>(true);
 
   const { isLoading, cachedProductCategories } = useAppSelector(
     (state) => state.products.value
@@ -75,6 +81,7 @@ const Store: NextPage<StoreProps> = ({ pageProps }) => {
 
   const setProductsFunction = async (data: GetProductsRequestValues) => {
     dispatch(setIsLoading(true));
+    setLocalIsLoading(true);
     const products = await GetProductsOperation(data);
 
     if (products.error) {
@@ -95,9 +102,11 @@ const Store: NextPage<StoreProps> = ({ pageProps }) => {
       );
     }
     dispatch(setIsLoading(false));
+    setLocalIsLoading(false);
   };
 
   const fetchMore = async () => {
+    setIsFetchingMore(true);
     const data = newSearchParams(getParams(router.query) as any);
 
     const currentCategory = cachedProductCategories?.filter(
@@ -155,10 +164,13 @@ const Store: NextPage<StoreProps> = ({ pageProps }) => {
             hasMore: products.hasMore,
           })
         );
+        setHasMore(products.hasMore);
       }
     }
+
     setEndReached(false);
     setIsLoading(false);
+    setIsFetchingMore(false);
   };
 
   useEffect(() => {
@@ -168,6 +180,7 @@ const Store: NextPage<StoreProps> = ({ pageProps }) => {
   }, [endReached, hasMore]);
 
   useEffect(() => {
+    setLocalIsLoading(true);
     const data = router.query;
 
     const params = getParams(data);
@@ -193,18 +206,25 @@ const Store: NextPage<StoreProps> = ({ pageProps }) => {
     <Layout>
       <StoreUtilityBar />
       <Head>
-        <title>{pageProps.categoryNameData}</title>
+        <title>{pageProps.initialProps.categoryNameData}</title>
         <link
           rel="icon"
           type="image/png"
           sizes="16x16"
           href="/favicon-16x16.png"
         />
-        <meta property="og:title" content={pageProps.categoryNameData} />
+        <meta
+          property="og:title"
+          content={pageProps.initialProps.categoryNameData}
+        />
         <meta property="og:site_name" content="store.happyoctopus.net" />
         <meta
           property="og:description"
-          content={`Latest and greatest products in ${pageProps.categoryNameData} brought to you exclusively by HappyOctopus's Jelly Bracelets.`}
+          content={`Latest and greatest products in ${pageProps.initialProps.categoryNameData} brought to you exclusively by HappyOctopus's Jelly Bracelets.`}
+        />
+        <meta
+          name="description"
+          content={`Latest and greatest products in ${pageProps.initialProps.categoryNameData} brought to you exclusively by HappyOctopus's Jelly Bracelets.`}
         />
         <meta property="og:image" content="/favicon-96x96.png" />
       </Head>
@@ -254,31 +274,41 @@ const Store: NextPage<StoreProps> = ({ pageProps }) => {
         </Flex>
       ) : null}
 
-      {isLoading ||
-      cachedProductCategories?.filter(
+      {!isLoading &&
+      localIsLoading &&
+      !cachedProductCategories?.filter(
         (cc) => cc.routerQuery === router.asPath
-      )[0]?.productsArray.length ? null : (
+      )[0]?.productsArray.length ? (
         <Text w={"100%"} textAlign={"center"} fontSize={18} fontWeight={"thin"}>
           {`No products matching this criteria, sorry :)`}
         </Text>
-      )}
+      ) : null}
+
+      {isFetchingMore ? (
+        <Flex justifyContent={"center"} alignItems={"center"}>
+          <Spinner my={4} color={"purple.500"} />
+        </Flex>
+      ) : null}
     </Layout>
   );
 };
 
-(Store as any).getInitialProps = async (context: NextPageContext) => {
-  const categoryName = await GetCategoryNameOperation(
-    parseInt(context.query.categoryId as string)
-  );
+Store.getInitialProps = wrapper.getInitialPageProps(
+  (store) => async (context) => {
+    const categoryName = await GetCategoryNameOperation(
+      parseInt(context.query.categoryId as string)
+    );
 
-  if (!categoryName[0]) {
-    return {
-      categoryNameData: "All products",
-    };
-  } else {
-    return {
-      categoryNameData: categoryName[0]?.hierarchicalName,
-    };
+    if (!categoryName[0]) {
+      return {
+        categoryNameData: "All products",
+      };
+    } else {
+      return {
+        categoryNameData: categoryName[0]?.hierarchicalName,
+      };
+    }
   }
-};
+);
+
 export default Store;

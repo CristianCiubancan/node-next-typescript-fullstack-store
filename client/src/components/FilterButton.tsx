@@ -58,7 +58,7 @@ const FilterButton: React.FC<FilterButtonProps> = ({ attributes }) => {
     <>
       <Button
         ref={btnRef as any}
-        colorScheme="teal"
+        colorScheme="purple"
         p={0}
         size={"lg"}
         onClick={onOpen}
@@ -176,7 +176,7 @@ const FilterButton: React.FC<FilterButtonProps> = ({ attributes }) => {
 
               <Button
                 mt={2}
-                colorScheme={"teal"}
+                colorScheme={"purple"}
                 w={"100%"}
                 onClick={() => {
                   const formerParams: any[] = [];

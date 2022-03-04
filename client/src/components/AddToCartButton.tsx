@@ -64,7 +64,7 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
 
           onOpen();
         }}
-        colorScheme={"teal"}
+        colorScheme={"purple"}
         w={"100%"}>
         Add to cart
       </Button>
@@ -113,6 +113,7 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
                   backgroundRepeat={"no-repeat"}
                   backgroundSize={"cover"}
                   filter={"auto"}
+                  alt={product.name}
                   fallbackSrc={product.images[0]?.placeholderUrl}
                   objectFit={"cover"}
                   src={
@@ -126,7 +127,7 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
             <AlertDialogFooter>
               <Flex flexDir={"column"} w={"100%"}>
                 <NextLink href={"/cart"}>
-                  <Button colorScheme="teal">Go to your cart</Button>
+                  <Button colorScheme="purple">Go to your cart</Button>
                 </NextLink>
                 <Button
                   mt={2}

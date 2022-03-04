@@ -21,7 +21,14 @@ const Index: React.FC<IndexProps> = () => {
         />
         <meta property="og:title" content="Jelly Bracelets" />
         <meta property="og:site_name" content="store.happyoctopus.net" />
-        <meta property="og:description" content="Order complete" />
+        <meta
+          property="og:description"
+          content="HappyOctopus's Jelly Bracelets store. Genuine products exclusively on store.happyoctopus.net"
+        />
+        <meta
+          name="description"
+          content="HappyOctopus's Jelly Bracelets store. Genuine products exclusively on store.happyoctopus.net"
+        />
         <meta
           property="og:image"
           content={`Latest and greatest products brought to you exclusively by HappyOctopus's Jelly Bracelets.`}

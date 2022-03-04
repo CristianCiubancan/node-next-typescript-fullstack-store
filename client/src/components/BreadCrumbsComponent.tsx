@@ -4,6 +4,7 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  Link,
   SkeletonText,
   Text,
   useToast,
@@ -108,7 +109,9 @@ const BreadCrumbsComponent: React.FC<BreadCrumbsComponentProps> = ({}) => {
               return (
                 <BreadcrumbItem key={bc.name}>
                   <NextLink href={bc.link}>
-                    <BreadcrumbLink>{bc.name}</BreadcrumbLink>
+                    <BreadcrumbLink as={Link} href={bc.link}>
+                      {bc.name}
+                    </BreadcrumbLink>
                   </NextLink>
                 </BreadcrumbItem>
               );

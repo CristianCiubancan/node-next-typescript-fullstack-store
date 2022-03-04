@@ -36,6 +36,7 @@ const ReviewOrder: React.FC<ReviewOrderProps> = ({}) => {
                   <Box>
                     <AspectRatio ratio={1} w={[50]}>
                       <Image
+                        alt={item.productName}
                         src={item.image}
                         fallbackSrc={item?.placeholderUrl}
                         objectFit={"cover"}
